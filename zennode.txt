@@ -1,0 +1,85 @@
+product={"product a":20,"product b":40,"product c":50}
+quantity={}
+gift_wrap={}
+for i in product:
+    quantity[i] = int(input("enter the quantities of {}:".format(i)))
+    gift_wrap[i]=input("do u need gift wrap?(yes/no)")
+    if gift_wrap[i].lower() == "yes" or gift_wrap[i].lower() == "no":
+        continue
+    else:
+        print("invalid option,no gift wrap applied")
+def subtotal(quantity,product):
+    subtotal={}
+    for i in quantity:
+        subtotal[i]=quantity[i]*product[i]
+    return subtotal
+def total(subtotal,quantity):
+    total=0
+    for i in subtotal:
+        total+=subtotal[i]
+    return total
+
+def discount(total,quantity,product,subtotalal):
+    flat_10 =0
+    bulk_5=0
+    bulk_10=0
+    tiered_50=0
+    total_quantities=0
+    a=0
+    if total>200:
+        flat_10=total-10
+    for i in quantity:
+        total_quantities+=quantity[i]
+        if quantity[i]>10:
+            bulk_5+=(subtotal[i]*0.05)
+    bulk_5=total-bulk_5
+    if total_quantities>20:
+        bulk_10= total*.1
+    bulk_10=total-bulk_10
+    if total_quantities>30:
+        for i in quantity:
+            if quantity[i]>15:
+                a=subtotal[i]-(15*product[i])
+                tiered_50+=a*.5
+    tiered_50=total-tiered_50
+    max_value= min(flat_10,bulk_5,bulk_10,tiered_50) 
+    if max_value == flat_10:
+        print("flat_10")
+        return flat_10
+    elif max_value== bulk_5:
+        print("bulk_5")
+        return bulk_5
+    elif max_value == tiered_50:
+        print("tiered_50")
+        return tiered_50
+    else:
+        print("bulk_10")
+        return bulk_10
+        
+def shipping_fee(quantity,gift_wrap):
+    quantities=0
+    gift =0
+    for i in quantity:
+        quantities+=quantity[i]
+        if gift_wrap[i] == "yes":
+            gift+=quantity[i]
+    fee =(quantities //10 +1 )*5
+    return fee,gift
+
+subtotal=subtotal(quantity,product)
+for i in product:
+    print(i)
+    print("----------------")
+    print("no of quantity: ",quantity[i])
+    print("amount of the product :",subtotal[i])
+    print("----------------")
+
+total=total(subtotal,quantity)
+print("cart",total)
+print("Discount applied:",end="")
+discount= discount(total,quantity,product,subtotal)
+print("discount amount",total-discount)
+ship,gift = shipping_fee(quantity,gift_wrap)
+print("shipping charge",ship)
+print("gift_wrap",gift)
+print("final price :",discount+ship+gift)
